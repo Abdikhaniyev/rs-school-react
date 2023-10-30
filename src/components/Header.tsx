@@ -4,11 +4,18 @@ import searchLogo from '../assets/search.svg';
 import './Header.css';
 
 interface Props {
-  search: string;
-  setSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setSearch: (value: string) => void;
 }
 
-export class Header extends Component<Props> {
+interface State {
+  inputValue: string;
+}
+
+export class Header extends Component<Props, State> {
+  state = {
+    inputValue: localStorage.getItem('search') || '',
+  };
+
   headerRef = React.createRef<HTMLDivElement>();
 
   handleScroll = () => {
@@ -42,10 +49,21 @@ export class Header extends Component<Props> {
             <input
               type="text"
               placeholder="Input character name"
-              value={this.props.search}
-              onChange={this.props.setSearch}
+              value={this.state.inputValue}
+              onChange={(e) => {
+                this.setState({ inputValue: e.target.value });
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  this.props.setSearch(this.state.inputValue);
+                }
+              }}
             />
-            <button>
+            <button
+              onClick={() => {
+                this.props.setSearch(this.state.inputValue);
+              }}
+            >
               <img src={searchLogo} alt="search" />
             </button>
           </div>

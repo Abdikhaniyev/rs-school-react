@@ -14,15 +14,15 @@ export class App extends Component<Props, State> {
     search: localStorage.getItem('search') || '',
   };
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    localStorage.setItem('search', event.target.value);
-    this.setState({ search: event.target.value });
+  handleChange = (value: string) => {
+    localStorage.setItem('search', value);
+    this.setState({ search: value });
   };
 
   render() {
     return (
       <>
-        <Banner search={this.state.search} setSearch={this.handleChange} />
+        <Banner setSearch={this.handleChange} />
         <Characters search={this.state.search} />
       </>
     );

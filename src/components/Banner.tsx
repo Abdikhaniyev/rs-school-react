@@ -3,15 +3,14 @@ import './Banner.css';
 import Header from './Header';
 
 interface Props {
-  search: string;
-  setSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setSearch: (value: string) => void;
 }
 
 export class Banner extends Component<Props> {
   render() {
     return (
       <div className="banner">
-        <Header search={this.props.search} setSearch={this.props.setSearch} />
+        <Header setSearch={this.props.setSearch} />
       </div>
     );
   }
