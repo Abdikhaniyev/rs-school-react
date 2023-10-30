@@ -1,0 +1,23 @@
+.warning-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.warning-button:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.warning-button img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
