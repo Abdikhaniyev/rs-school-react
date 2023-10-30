@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from '../assets/Rick_and_Morty.svg';
+import logo from '/Rick_and_Morty.svg';
 import searchLogo from '../assets/search.svg';
 import './Header.css';
 
