@@ -2,3 +2,15 @@
   padding: 0 1.5rem;
   width: 100%;
 }
+
+.detailed {
+  display: grid;
+  grid-template-columns: minmax(400px, 1fr) minmax(400px, 2fr);
+}
+
+@media screen and (max-width: 1024px) {
+  .detailed {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}

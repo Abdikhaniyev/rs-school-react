@@ -69,4 +69,20 @@
       }
     }
   }
+
+  &--inline {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+
+    & img {
+      border-radius: 0.25rem;
+      height: 5rem;
+    }
+
+    .location {
+      display: none;
+    }
+  }
 }
