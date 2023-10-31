@@ -27,3 +27,9 @@ export interface Info {
   next: string | null;
   prev: string | null;
 }
+
+export interface Episode extends ResourceBase {
+  air_date: string;
+  episode: string;
+  characters: string[];
+}
