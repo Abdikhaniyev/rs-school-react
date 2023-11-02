@@ -11,13 +11,13 @@
   width: 100%;
   background-color: rgba(255, 255, 255, 0.3);
   transition: background-color 0.3s ease-in-out;
-}
 
-.warning-button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
-}
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
 
-.warning-button img {
-  width: 1.5rem;
-  height: 1.5rem;
+  img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
