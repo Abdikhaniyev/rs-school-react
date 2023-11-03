@@ -5,6 +5,8 @@ import { getEpisodes } from '../../api/episode';
 import { Character, Episode } from '../../interfaces';
 import styles from './Detailed.module.scss';
 
+const home = import.meta.env.VITE_HOME_PAGE;
+
 export default function Detailed() {
   const { characterId } = useParams();
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ export default function Detailed() {
               {name}
               <button
                 onClick={() => {
-                  navigate(`/?${searchParams.toString()}`);
+                  navigate(`${home}/?${searchParams.toString()}`);
                 }}
               >
                 Back
