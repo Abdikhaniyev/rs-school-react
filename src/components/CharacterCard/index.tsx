@@ -7,6 +7,8 @@ interface Props {
   character: Character;
 }
 
+const home = import.meta.env.VITE_HOME_PAGE;
+
 export default function CharacterCard({ inline, character }: Props) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -15,7 +17,7 @@ export default function CharacterCard({ inline, character }: Props) {
   return (
     <div
       className={`${styles['character-card']} ${inline ? styles['character-card--inline'] : ''}`}
-      onClick={() => navigate(`/character/${id}?${searchParams}`)}
+      onClick={() => navigate(`${home}/character/${id}?${searchParams}`)}
     >
       <div className={styles['character-card__image']}>
         <img src={image} alt={name} />
