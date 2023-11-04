@@ -4,6 +4,7 @@ import { getCharacter } from '../../api/character';
 import { getEpisodes } from '../../api/episode';
 import { Character, Episode } from '../../interfaces';
 import styles from './Detailed.module.scss';
+import Spinner from '../Spinner';
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
@@ -13,13 +14,19 @@ export default function Detailed() {
   const [searchParams] = useSearchParams();
   const [character, setCharacter] = useState<Character | null>(null);
   const [episodes, setEpisodes] = useState<Episode[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { name, image, status, species, location, gender, origin, episode } = character || {};
 
   const fetchCharacter = async (id: string) => {
-    getCharacter(id).then((data) => {
-      setCharacter(data);
-    });
+    setLoading(true);
+    getCharacter(id)
+      .then((data) => {
+        setCharacter(data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const fetchEpisodes = async (episodes: (string | undefined)[]) => {
@@ -46,7 +53,15 @@ export default function Detailed() {
 
   return (
     <div className={styles.container}>
-      {character && (
+      {loading && (
+        <div
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          className={styles.container}
+        >
+          <Spinner />
+        </div>
+      )}
+      {!loading && character && (
         <div className={styles.character}>
           <div className={styles.avatar}>
             <img src={image} alt={name} />
