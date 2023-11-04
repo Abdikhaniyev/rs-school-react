@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Outlet, useParams, useSearchParams } from 'react-router-dom';
 import styles from './App.module.scss';
+import { getCharacters } from './api/character';
 import {
   Banner,
   BugButton,
@@ -9,9 +11,7 @@ import {
   Pagination,
   WarningSection,
 } from './components';
-import { Outlet, useParams, useSearchParams } from 'react-router-dom';
 import { Character, Info } from './interfaces';
-import { getCharacters } from './api/character';
 
 export default function App() {
   const { characterId } = useParams();
@@ -22,8 +22,10 @@ export default function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [info, setInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchCharacters = async (search: string, page?: number) => {
+    setLoading(true);
     getCharacters(search, page)
       .then((data) => {
         setError('');
@@ -33,6 +35,9 @@ export default function App() {
       .catch((error) => {
         setError(error.message);
         setCharacters([]);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -56,7 +61,7 @@ export default function App() {
         <BugButton />
       </WarningSection>
       <div className={characterId ? styles.detailed : ''}>
-        <Characters characters={characters} error={error} />
+        <Characters characters={characters} loading={loading} error={error} />
         <Outlet />
       </div>
       {characters?.length > 0 && info !== null && (

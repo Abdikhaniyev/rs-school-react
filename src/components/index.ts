@@ -7,4 +7,5 @@ export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as Fallback } from './Fallback';
 export { default as Header } from './Header';
 export { default as Pagination } from './Pagination';
+export { default as Spinner } from './Spinner';
 export { default as WarningSection } from './WarningSection';
