@@ -8,6 +8,8 @@ import {
   Characters,
   ErrorBoundary,
   Fallback,
+  Footer,
+  Header,
   Pagination,
   WarningSection,
 } from './components';
@@ -56,7 +58,8 @@ export default function App() {
 
   return (
     <ErrorBoundary fallback={<Fallback>Something went wrong</Fallback>}>
-      <Banner setSearch={handleChange} />
+      <Header setSearch={handleChange} />
+      <Banner />
       <WarningSection>
         <BugButton />
       </WarningSection>
@@ -72,6 +75,7 @@ export default function App() {
           onChange={handlePageChange}
         />
       )}
+      <Footer />
     </ErrorBoundary>
   );
 }

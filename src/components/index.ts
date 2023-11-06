@@ -5,6 +5,7 @@ export { default as Characters } from './Characters';
 export { default as Detailed } from './Detailed';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as Fallback } from './Fallback';
+export { default as Footer } from './Footer';
 export { default as Header } from './Header';
 export { default as Pagination } from './Pagination';
 export { default as Spinner } from './Spinner';
