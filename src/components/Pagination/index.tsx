@@ -10,7 +10,8 @@ interface Props {
   onChange: (page: number) => void;
 }
 
-export default function Pagination({ count, current, pages, onChange }: Props) {
+export default function Pagination(props: Props) {
+  const { count, current, pages, onChange } = props;
   const [start, setStart] = useState<number>(current < 6 ? 1 : current - 5);
   const [end, setEnd] = useState<number>(current < 6 ? 10 : current + 4);
   const [pagesArray, setPagesArray] = useState<number[]>([]);
