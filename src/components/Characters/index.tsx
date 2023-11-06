@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Character } from '../../interfaces';
 import CharacterCard from '../CharacterCard';
 import styles from './Characters.module.scss';
@@ -10,8 +10,12 @@ interface Props {
   error: string;
 }
 
+const home = import.meta.env.VITE_HOME_PAGE;
+
 export default function Characters({ characters, loading, error }: Props) {
   const { characterId } = useParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   return (
     <div className={styles.characters}>
@@ -23,7 +27,12 @@ export default function Characters({ characters, loading, error }: Props) {
           <Spinner />
         </div>
       )}
-      <div className={`${styles.container} ${characterId ? styles.vertical : ''}`}>
+      <div
+        onClick={() => {
+          characterId && navigate(`${home}/?${searchParams.toString()}`);
+        }}
+        className={`${styles.container} ${characterId ? styles.vertical : ''}`}
+      >
         {!loading &&
           characters?.map((character: Character) => (
             <CharacterCard
