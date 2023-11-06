@@ -64,6 +64,10 @@
       border-top-right-radius: 0.5rem;
       border-bottom-right-radius: 0.5rem;
 
+      @media screen and (max-width: 768px) {
+        max-width: 2.5rem;
+      }
+
       &:hover {
         background: #2b8b9a;
       }
@@ -73,11 +77,5 @@
         width: auto;
       }
     }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  button {
-    max-width: 2.5rem;
   }
 }
