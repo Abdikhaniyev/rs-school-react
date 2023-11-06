@@ -1,23 +1,30 @@
+import { forwardRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Character } from '../../interfaces';
 import styles from './CharacterCard.module.scss';
 
-interface Props {
-  inline?: boolean;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   character: Character;
+  inline?: boolean;
+  bannerCard?: boolean;
 }
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
-export default function CharacterCard({ inline, character }: Props) {
+const CharacterCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { id, name, image, status, species, location, origin } = character;
+  const { character, inline, bannerCard, ...otherProps } = props;
+  const { id, name, image, status, species } = character;
 
   return (
     <div
-      className={`${styles['character-card']} ${inline ? styles['character-card--inline'] : ''}`}
-      onClick={() => navigate(`${home}/character/${id}?${searchParams}`)}
+      className={`${styles['character-card']} ${inline ? styles['character-card--inline'] : ''} ${
+        bannerCard ? styles['disabled'] : ''
+      }`}
+      onClick={bannerCard ? () => {} : () => navigate(`${home}/character/${id}?${searchParams}`)}
+      ref={ref}
+      {...otherProps}
     >
       <div className={styles['character-card__image']}>
         <img src={image} alt={name} />
@@ -31,17 +38,9 @@ export default function CharacterCard({ inline, character }: Props) {
             {status} - {species}
           </span>
         </div>
-
-        <div className={styles.location}>
-          <h6>Last known location:</h6>
-          <p>{location.name}</p>
-        </div>
-
-        <div className={styles.location}>
-          <h6>First seen in:</h6>
-          <p>{origin.name}</p>
-        </div>
       </div>
     </div>
   );
-}
+});
+
+export default CharacterCard;
