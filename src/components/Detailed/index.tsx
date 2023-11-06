@@ -52,7 +52,7 @@ export default function Detailed() {
   }, [episode]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.character}>
       {loading && (
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -62,7 +62,7 @@ export default function Detailed() {
         </div>
       )}
       {!loading && character && (
-        <div className={styles.character}>
+        <div className={styles.container}>
           <div className={styles.avatar}>
             <img src={image} alt={name} />
           </div>
