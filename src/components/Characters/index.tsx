@@ -15,7 +15,12 @@ export default function Characters() {
   const { loading, error, results } = characters;
 
   return (
-    <div className={styles.characters}>
+    <div
+      className={styles.characters}
+      onClick={() => {
+        characterId && navigate(`${home}/?${searchParams.toString()}`);
+      }}
+    >
       {loading && (
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -24,12 +29,7 @@ export default function Characters() {
           <Spinner />
         </div>
       )}
-      <div
-        onClick={() => {
-          characterId && navigate(`${home}/?${searchParams.toString()}`);
-        }}
-        className={`${styles.container} ${characterId ? styles.vertical : ''}`}
-      >
+      <div className={`${styles.container} ${characterId ? styles.vertical : ''}`}>
         {!loading &&
           results?.map((character: Character) => (
             <CharacterCard
