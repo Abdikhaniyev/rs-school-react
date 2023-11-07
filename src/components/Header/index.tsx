@@ -1,16 +1,12 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import searchLogo from '../../assets/search.svg';
+import { useStoreContext } from '../../context/StoreContext';
 import styles from './Header.module.scss';
 import logo from '/Rick_and_Morty.svg';
 
-interface Props {
-  setSearch: (value: string) => void;
-}
-
-export default function Header({ setSearch }: Props) {
-  const [, setSearchParams] = useSearchParams();
-  const [inputValue, setInputValue] = useState<string>(localStorage.getItem('search') || '');
+export default function Header() {
+  const { search, setSearch } = useStoreContext();
+  const [inputValue, setInputValue] = useState<string>(search);
   const headerRef = useRef<HTMLElement | null>(null);
 
   const handleScroll = () => {
@@ -38,7 +34,6 @@ export default function Header({ setSearch }: Props) {
 
   const handleSearch = () => {
     setSearch(inputValue);
-    setSearchParams({ page: '1' });
   };
 
   return (

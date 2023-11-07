@@ -3,19 +3,16 @@ import { Character } from '../../interfaces';
 import CharacterCard from '../CharacterCard';
 import styles from './Characters.module.scss';
 import Spinner from '../Spinner';
-
-interface Props {
-  characters: Character[];
-  loading: boolean;
-  error: string;
-}
+import { useStoreContext } from '../../context/StoreContext';
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
-export default function Characters({ characters, loading, error }: Props) {
+export default function Characters() {
   const { characterId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { characters } = useStoreContext();
+  const { loading, error, results } = characters;
 
   return (
     <div className={styles.characters}>
@@ -34,7 +31,7 @@ export default function Characters({ characters, loading, error }: Props) {
         className={`${styles.container} ${characterId ? styles.vertical : ''}`}
       >
         {!loading &&
-          characters?.map((character: Character) => (
+          results?.map((character: Character) => (
             <CharacterCard
               key={character.id}
               character={character}
@@ -42,7 +39,7 @@ export default function Characters({ characters, loading, error }: Props) {
             />
           ))}
 
-        {!loading && characters?.length === 0 && (
+        {!loading && results?.length === 0 && (
           <div className={styles['no-results']}>
             <h2>{error}</h2>
           </div>
