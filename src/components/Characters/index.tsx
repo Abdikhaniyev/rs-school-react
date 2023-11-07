@@ -36,6 +36,7 @@ export default function Characters() {
               key={character.id}
               character={character}
               inline={characterId !== undefined}
+              selected={characterId && parseInt(characterId) === character.id ? true : false}
             />
           ))}
 

@@ -112,4 +112,9 @@
     cursor: default;
     pointer-events: none;
   }
+
+  &.selected {
+    transform: scale(1.03);
+    border: 3px solid #42b4ca;
+  }
 }
