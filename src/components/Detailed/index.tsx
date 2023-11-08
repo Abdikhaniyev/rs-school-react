@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getCharacter } from '../../api/character';
 import { getEpisodes } from '../../api/episode';
@@ -17,30 +17,33 @@ export default function Detailed() {
   const { character, episodes, loading } = currentCharacter || {};
   const { name, image, status, species, location, gender, origin } = character || {};
 
-  const fetchCharacterDetails = async (id: string) => {
-    setCurrentCharacter({ character: null, episodes: [], loading: true, error: '', info: null });
-    getCharacter(id)
-      .then((character) => {
-        getEpisodes(character.episode).then((episodes) => {
-          setCurrentCharacter({ character, episodes, loading: false, error: '', info: null });
+  const fetchCharacterDetails = useCallback(
+    async (id: string) => {
+      setCurrentCharacter({ character: null, episodes: [], loading: true, error: '', info: null });
+      getCharacter(id)
+        .then((character) => {
+          getEpisodes(character.episode).then((episodes) => {
+            setCurrentCharacter({ character, episodes, loading: false, error: '', info: null });
+          });
+        })
+        .catch((error) => {
+          setCurrentCharacter({
+            character: null,
+            episodes: [],
+            loading: false,
+            error: error.message,
+            info: null,
+          });
         });
-      })
-      .catch((error) => {
-        setCurrentCharacter({
-          character: null,
-          episodes: [],
-          loading: false,
-          error: error.message,
-          info: null,
-        });
-      });
-  };
+    },
+    [setCurrentCharacter]
+  );
 
   useEffect(() => {
     if (characterId) {
       fetchCharacterDetails(characterId);
     }
-  }, [characterId]);
+  }, [characterId, fetchCharacterDetails]);
 
   return (
     <div className={styles.character}>

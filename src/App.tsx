@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import styles from './App.module.scss';
 import { getCharacters } from './api/character';
@@ -21,25 +21,28 @@ export default function App() {
   const { search, page, setPage, characters, setCharacters } = useStoreContext();
   const { results, info } = characters;
 
-  const fetchCharacters = async (search: string, page?: number) => {
-    setCharacters({ results: [], info: null, error: '', loading: true });
-    getCharacters(search, page)
-      .then((data) => {
-        setCharacters({
-          results: data.results,
-          info: data.info,
-          error: '',
-          loading: false,
+  const fetchCharacters = useCallback(
+    async (search: string, page?: number) => {
+      setCharacters({ results: [], info: null, error: '', loading: true });
+      getCharacters(search, page)
+        .then((data) => {
+          setCharacters({
+            results: data.results,
+            info: data.info,
+            error: '',
+            loading: false,
+          });
+        })
+        .catch((error) => {
+          setCharacters({ results: [], info: null, error: error.message, loading: false });
         });
-      })
-      .catch((error) => {
-        setCharacters({ results: [], info: null, error: error.message, loading: false });
-      });
-  };
+    },
+    [setCharacters]
+  );
 
   useEffect(() => {
     fetchCharacters(search, page);
-  }, [search, page]);
+  }, [search, page, fetchCharacters]);
 
   return (
     <ErrorBoundary fallback={<Fallback>Something went wrong</Fallback>}>
