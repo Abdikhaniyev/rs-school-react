@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import searchLogo from '../../assets/search.svg';
 import { useStoreContext } from '../../context/StoreContext';
 import styles from './Header.module.scss';
@@ -32,6 +32,11 @@ export default function Header() {
     setInputValue(event.target.value);
   };
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSearch();
+  };
+
   const handleSearch = () => {
     setSearch(inputValue);
   };
@@ -41,9 +46,11 @@ export default function Header() {
       <div className={styles.container}>
         <img className={styles.logo} src={logo} alt="logo" />
 
-        <div className={styles.search}>
+        <form className={styles.search} onSubmit={(e) => handleSubmit(e)}>
           <input
-            type="text"
+            autoComplete="off"
+            name="search"
+            type="search"
             placeholder="Input character name"
             value={inputValue}
             onChange={handleChange}
@@ -53,14 +60,10 @@ export default function Header() {
               }
             }}
           />
-          <button
-            onClick={() => {
-              handleSearch();
-            }}
-          >
+          <button type="submit">
             <img src={searchLogo} alt="search" />
           </button>
-        </div>
+        </form>
       </div>
     </header>
   );
