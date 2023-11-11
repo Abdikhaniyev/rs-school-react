@@ -1,22 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import leftIcon from '../../assets/left.svg';
 import rightIcon from '../../assets/right.svg';
 import styles from './Pagination.module.scss';
+import { useStoreContext } from '../../context/StoreContext';
 
 interface Props {
   count: number;
   current: number;
   pages: number;
-  onChange: (page: number) => void;
 }
 
-export default function Pagination({ count, current, pages, onChange }: Props) {
+export default function Pagination(props: Props) {
+  const { setPage } = useStoreContext();
+  const { count, current, pages } = props;
   const [start, setStart] = useState<number>(current < 6 ? 1 : current - 5);
   const [end, setEnd] = useState<number>(current < 6 ? 10 : current + 4);
   const [pagesArray, setPagesArray] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
 
-  const generatePagesArray = () => {
+  const generatePagesArray = useCallback(() => {
     const pagesArray = [];
     for (let i = start; i <= end; i++) {
       if (i > pages) break;
@@ -24,33 +26,42 @@ export default function Pagination({ count, current, pages, onChange }: Props) {
     }
 
     setPagesArray(pagesArray);
-  };
+  }, [end, pages, start]);
 
   useEffect(() => {
     setStart(current < 6 ? 1 : current - 5);
     setEnd(current < 6 ? 10 : current + 4);
     generatePagesArray();
-  }, [current, count]);
+  }, [current, count, generatePagesArray]);
 
   return (
     <div className={styles['pagination-container']}>
       <ul className={styles.pagination}>
         {current > 1 && (
-          <li className={styles['pagination__item']} onClick={() => onChange(current - 1)}>
+          <li
+            data-testid="pagination__item"
+            className={styles['pagination__item']}
+            onClick={() => setPage(current - 1)}
+          >
             <img src={leftIcon} alt="prev" />
           </li>
         )}
         {pagesArray.map((page) => (
           <li
             key={page}
+            data-testid="pagination__item"
             className={`${styles['pagination__item']} ${page === current ? styles.active : ''}`}
-            onClick={() => onChange(page)}
+            onClick={() => setPage(page)}
           >
             {page}
           </li>
         ))}
         {current < pages && (
-          <li className={styles['pagination__item']} onClick={() => onChange(current + 1)}>
+          <li
+            data-testid="pagination__item"
+            className={styles['pagination__item']}
+            onClick={() => setPage(current + 1)}
+          >
             <img src={rightIcon} alt="next" />
           </li>
         )}
@@ -73,7 +84,7 @@ export default function Pagination({ count, current, pages, onChange }: Props) {
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
-            onChange(parseInt(inputValue));
+            setPage(parseInt(inputValue));
           }
         }}
       />

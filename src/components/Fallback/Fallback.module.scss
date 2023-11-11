@@ -1,15 +1,25 @@
 @import '../../App.module.scss';
 
 .fallback {
-  background: url('../../assets/background2.jpg') no-repeat center center fixed;
-
-  > .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  & > .container {
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr;
     height: 100vh;
     font-size: 2.5rem;
     font-weight: 600;
+
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      text-align: center;
+      padding-block: 3rem;
+    }
+
+    img {
+      width: 100%;
+      max-width: 500px;
+    }
   }
 }

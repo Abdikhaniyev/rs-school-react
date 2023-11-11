@@ -10,6 +10,7 @@
     align-items: center;
     gap: 1rem;
     margin-block: 1rem;
+    flex-wrap: wrap;
 
     input {
       height: 2.625rem;
@@ -63,5 +64,11 @@
       border-top-right-radius: 2rem;
       border-bottom-right-radius: 2rem;
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .pagination {
+    display: none;
   }
 }

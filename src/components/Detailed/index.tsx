@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getCharacter } from '../../api/character';
 import { getEpisodes } from '../../api/episode';
-import { Character, Episode } from '../../interfaces';
-import styles from './Detailed.module.scss';
+import { useStoreContext } from '../../context/StoreContext';
 import Spinner from '../Spinner';
+import styles from './Detailed.module.scss';
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
@@ -12,47 +12,41 @@ export default function Detailed() {
   const { characterId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [character, setCharacter] = useState<Character | null>(null);
-  const [episodes, setEpisodes] = useState<Episode[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { currentCharacter, setCurrentCharacter } = useStoreContext();
 
-  const { name, image, status, species, location, gender, origin, episode } = character || {};
+  const { character, episodes, loading } = currentCharacter || {};
+  const { name, image, status, species, location, gender, origin } = character || {};
 
-  const fetchCharacter = async (id: string) => {
-    setLoading(true);
-    getCharacter(id)
-      .then((data) => {
-        setCharacter(data);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const fetchEpisodes = async (episodes: (string | undefined)[]) => {
-    if (episodes?.length === 0) {
-      setEpisodes([]);
-      return;
-    }
-    getEpisodes(episodes).then((data) => {
-      setEpisodes(data);
-    });
-  };
+  const fetchCharacterDetails = useCallback(
+    async (id: string) => {
+      setCurrentCharacter({ character: null, episodes: [], loading: true, error: '', info: null });
+      getCharacter(id)
+        .then((character) => {
+          getEpisodes(character.episode).then((episodes) => {
+            setCurrentCharacter({ character, episodes, loading: false, error: '', info: null });
+          });
+        })
+        .catch((error) => {
+          setCurrentCharacter({
+            character: null,
+            episodes: [],
+            loading: false,
+            error: error.message,
+            info: null,
+          });
+        });
+    },
+    [setCurrentCharacter]
+  );
 
   useEffect(() => {
     if (characterId) {
-      fetchCharacter(characterId);
+      fetchCharacterDetails(characterId);
     }
-  }, [characterId]);
-
-  useEffect(() => {
-    if (episode) {
-      fetchEpisodes(episode);
-    }
-  }, [episode]);
+  }, [characterId, fetchCharacterDetails]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.character}>
       {loading && (
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -62,7 +56,7 @@ export default function Detailed() {
         </div>
       )}
       {!loading && character && (
-        <div className={styles.character}>
+        <div className={styles.container}>
           <div className={styles.avatar}>
             <img src={image} alt={name} />
           </div>
@@ -70,6 +64,7 @@ export default function Detailed() {
             <h1 className={styles.name}>
               {name}
               <button
+                data-testid="back"
                 onClick={() => {
                   navigate(`${home}/?${searchParams.toString()}`);
                 }}

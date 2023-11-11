@@ -1,20 +1,26 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Character } from '../../interfaces';
 import CharacterCard from '../CharacterCard';
 import styles from './Characters.module.scss';
 import Spinner from '../Spinner';
+import { useStoreContext } from '../../context/StoreContext';
 
-interface Props {
-  characters: Character[];
-  loading: boolean;
-  error: string;
-}
+const home = import.meta.env.VITE_HOME_PAGE;
 
-export default function Characters({ characters, loading, error }: Props) {
+export default function Characters() {
   const { characterId } = useParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { characters } = useStoreContext();
+  const { loading, error, results } = characters;
 
   return (
-    <div className={styles.characters}>
+    <div
+      className={styles.characters}
+      onClick={() => {
+        characterId && navigate(`${home}/?${searchParams.toString()}`);
+      }}
+    >
       {loading && (
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -25,15 +31,16 @@ export default function Characters({ characters, loading, error }: Props) {
       )}
       <div className={`${styles.container} ${characterId ? styles.vertical : ''}`}>
         {!loading &&
-          characters?.map((character: Character) => (
+          results?.map((character: Character) => (
             <CharacterCard
               key={character.id}
               character={character}
               inline={characterId !== undefined}
+              selected={characterId && parseInt(characterId) === character.id ? true : false}
             />
           ))}
 
-        {!loading && characters?.length === 0 && (
+        {!loading && results?.length === 0 && (
           <div className={styles['no-results']}>
             <h2>{error}</h2>
           </div>

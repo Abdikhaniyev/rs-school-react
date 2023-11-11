@@ -1,3 +1,4 @@
+export { default as Page404 } from './404';
 export { default as Banner } from './Banner';
 export { default as BugButton } from './BugButton';
 export { default as CharacterCard } from './CharacterCard';
@@ -5,6 +6,7 @@ export { default as Characters } from './Characters';
 export { default as Detailed } from './Detailed';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as Fallback } from './Fallback';
+export { default as Footer } from './Footer';
 export { default as Header } from './Header';
 export { default as Pagination } from './Pagination';
 export { default as Spinner } from './Spinner';

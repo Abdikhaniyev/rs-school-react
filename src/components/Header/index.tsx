@@ -1,16 +1,12 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import searchLogo from '../../assets/search.svg';
+import { useStoreContext } from '../../context/StoreContext';
 import styles from './Header.module.scss';
 import logo from '/Rick_and_Morty.svg';
 
-interface Props {
-  setSearch: (value: string) => void;
-}
-
-export default function Header({ setSearch }: Props) {
-  const [, setSearchParams] = useSearchParams();
-  const [inputValue, setInputValue] = useState<string>(localStorage.getItem('search') || '');
+export default function Header() {
+  const { search, setSearch } = useStoreContext();
+  const [inputValue, setInputValue] = useState<string>(search);
   const headerRef = useRef<HTMLElement | null>(null);
 
   const handleScroll = () => {
@@ -36,9 +32,13 @@ export default function Header({ setSearch }: Props) {
     setInputValue(event.target.value);
   };
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSearch();
+  };
+
   const handleSearch = () => {
     setSearch(inputValue);
-    setSearchParams({ page: '1' });
   };
 
   return (
@@ -46,9 +46,12 @@ export default function Header({ setSearch }: Props) {
       <div className={styles.container}>
         <img className={styles.logo} src={logo} alt="logo" />
 
-        <div className={styles.search}>
+        <form className={styles.search} onSubmit={(e) => handleSubmit(e)}>
           <input
-            type="text"
+            data-testid="search-input"
+            autoComplete="off"
+            name="search"
+            type="search"
             placeholder="Input character name"
             value={inputValue}
             onChange={handleChange}
@@ -58,14 +61,10 @@ export default function Header({ setSearch }: Props) {
               }
             }}
           />
-          <button
-            onClick={() => {
-              handleSearch();
-            }}
-          >
+          <button type="submit" data-testid="search-button">
             <img src={searchLogo} alt="search" />
           </button>
-        </div>
+        </form>
       </div>
     </header>
   );
