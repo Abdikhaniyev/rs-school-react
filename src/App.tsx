@@ -18,7 +18,7 @@ import { Info } from './interfaces';
 
 export default function App() {
   const { characterId } = useParams();
-  const { search, page, setPage, characters, setCharacters } = useStoreContext();
+  const { search, page, characters, setCharacters } = useStoreContext();
   const { results, info } = characters;
 
   const fetchCharacters = useCallback(
@@ -56,12 +56,7 @@ export default function App() {
         <Outlet />
       </div>
       {results?.length > 0 && info !== null && (
-        <Pagination
-          current={page}
-          count={(info as Info)?.count}
-          pages={(info as Info)?.pages}
-          onChange={setPage}
-        />
+        <Pagination current={page} count={(info as Info)?.count} pages={(info as Info)?.pages} />
       )}
       <Footer />
     </ErrorBoundary>
