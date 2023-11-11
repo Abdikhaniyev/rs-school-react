@@ -48,6 +48,7 @@ export default function Header() {
 
         <form className={styles.search} onSubmit={(e) => handleSubmit(e)}>
           <input
+            data-testid="search-input"
             autoComplete="off"
             name="search"
             type="search"
@@ -60,7 +61,7 @@ export default function Header() {
               }
             }}
           />
-          <button type="submit">
+          <button type="submit" data-testid="search-button">
             <img src={searchLogo} alt="search" />
           </button>
         </form>
