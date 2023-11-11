@@ -20,6 +20,7 @@ const CharacterCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <div
+      data-testid="character-card"
       className={`${styles['character-card']} ${inline ? styles['character-card--inline'] : ''} ${
         bannerCard ? styles['disabled'] : ''
       } ${selected ? styles['selected'] : ''}
@@ -29,7 +30,9 @@ const CharacterCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
           ? () => {}
           : (e: MouseEvent) => {
               e.stopPropagation();
-              navigate(`${home}/character/${id}?${searchParams}`);
+              navigate(
+                `${home}/character/${id}${searchParams.toString() ? `?${searchParams}` : ''}`
+              );
             }
       }
       ref={ref}
