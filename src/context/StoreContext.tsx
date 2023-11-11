@@ -8,7 +8,7 @@ interface FetchState {
   loading: boolean;
 }
 
-interface CharactersState extends FetchState {
+export interface CharactersState extends FetchState {
   results: Character[];
 }
 
@@ -17,7 +17,7 @@ interface CharacterState extends FetchState {
   episodes: Episode[];
 }
 
-interface StoreContextState {
+export interface StoreContextState {
   search: string;
   setSearch: (search: string) => void;
   page: number;
