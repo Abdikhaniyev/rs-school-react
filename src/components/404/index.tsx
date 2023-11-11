@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import image from '../../assets/404.webp';
 import styles from './404.module.scss';
 
-const home = import.meta.env.VITE_HOME_PAGE;
+const home = `${import.meta.env.VITE_HOME_PAGE}/`;
 
 export default function Page404() {
   const navigate = useNavigate();
