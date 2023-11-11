@@ -64,6 +64,7 @@ export default function Detailed() {
             <h1 className={styles.name}>
               {name}
               <button
+                data-testid="back"
                 onClick={() => {
                   navigate(`${home}/?${searchParams.toString()}`);
                 }}
