@@ -1,3 +1,4 @@
+export { default as Page404 } from './404';
 export { default as Banner } from './Banner';
 export { default as BugButton } from './BugButton';
 export { default as CharacterCard } from './CharacterCard';
