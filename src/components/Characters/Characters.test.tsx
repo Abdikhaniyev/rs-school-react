@@ -73,6 +73,7 @@ describe('Characters component', () => {
     };
 
     render(<Characters />, {
+      store: true,
       storeValues: {
         search: '',
         setSearch: () => {},
@@ -96,6 +97,7 @@ describe('Characters component', () => {
       results: [],
     };
     render(<Characters />, {
+      store: true,
       storeValues: {
         search: '',
         setSearch: () => {},

@@ -9,14 +9,19 @@ import {
 import { StoreContext, StoreContextState } from '../context/StoreContext';
 
 interface Options extends RenderOptions {
-  storeValues: StoreContextState;
   router?: 'memory' | 'browser';
   routerProps?: BrowserRouterProps | MemoryRouterProps;
 }
 
+interface OptionsWithStore extends Options {
+  store: true;
+  storeValues: StoreContextState;
+}
+
 function customRender(
   ui: ReactElement,
-  options: Options = {
+  options: Options | OptionsWithStore = {
+    store: true,
     storeValues: {
       search: localStorage.getItem('search') || '',
       setSearch: () => {},
@@ -32,15 +37,16 @@ function customRender(
   }
 ) {
   const Wrapper = ({ children }: { children: ReactNode }) => {
-    return (
-      <StoreContext.Provider value={options.storeValues}>
-        {options.router === 'browser' ? (
-          <BrowserRouter {...options.routerProps}>{children}</BrowserRouter>
-        ) : (
-          <MemoryRouter {...options.routerProps}>{children}</MemoryRouter>
-        )}
-      </StoreContext.Provider>
-    );
+    const Router = options.router === 'browser' ? BrowserRouter : MemoryRouter;
+    if ((options as OptionsWithStore).store) {
+      return (
+        <StoreContext.Provider value={(options as OptionsWithStore).storeValues}>
+          <Router {...options.routerProps}>{children}</Router>
+        </StoreContext.Provider>
+      );
+    } else {
+      return <Router {...options.routerProps}>{children}</Router>;
+    }
   };
 
   return render(ui, {

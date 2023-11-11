@@ -27,6 +27,7 @@ const mockCharacter: Character = {
 describe('Detailed component', () => {
   it('displays a loading indicator while fetching data', async () => {
     render(<Detailed />, {
+      store: true,
       storeValues: {
         currentCharacter: {
           character: null,
@@ -54,6 +55,7 @@ describe('Detailed component', () => {
 
   it('displays the detailed card data', async () => {
     render(<Detailed />, {
+      store: true,
       storeValues: {
         currentCharacter: {
           character: mockCharacter,
@@ -93,6 +95,7 @@ describe('Detailed component', () => {
           <Route path="/rs-school-react/character/:characterId" element={<Detailed />} />,
         </Routes>,
         {
+          store: true,
           storeValues: {
             currentCharacter: {
               character: mockCharacter,
