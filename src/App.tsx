@@ -15,10 +15,12 @@ import {
 } from './components';
 import { useStoreContext } from './context/StoreContext';
 import { Info } from './interfaces';
+import { useAppSelector } from './redux/store';
 
 export default function App() {
   const { characterId } = useParams();
-  const { search, page, characters, setCharacters } = useStoreContext();
+  const search = useAppSelector((state) => state.search.value);
+  const { page, characters, setCharacters } = useStoreContext();
   const { results, info } = characters;
 
   const fetchCharacters = useCallback(

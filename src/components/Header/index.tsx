@@ -1,11 +1,13 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import searchLogo from '../../assets/search.svg';
-import { useStoreContext } from '../../context/StoreContext';
+import { setSearch } from '../../redux/slices/searchSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import styles from './Header.module.scss';
 import logo from '/Rick_and_Morty.svg';
 
 export default function Header() {
-  const { search, setSearch } = useStoreContext();
+  const search = useAppSelector((state) => state.search.value);
+  const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState<string>(search);
   const headerRef = useRef<HTMLElement | null>(null);
 
@@ -38,7 +40,7 @@ export default function Header() {
   };
 
   const handleSearch = () => {
-    setSearch(inputValue);
+    dispatch(setSearch(inputValue));
   };
 
   return (
