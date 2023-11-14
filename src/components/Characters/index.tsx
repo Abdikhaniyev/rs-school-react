@@ -14,7 +14,7 @@ export default function Characters() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1;
-  const [search] = useAppSelector((state) => [state.search.value]);
+  const [search] = useAppSelector((state) => [state.layout.search]);
   const { data, isFetching, isError, error } = useGetCharactersQuery({ name: search, page });
 
   return (
@@ -34,7 +34,6 @@ export default function Characters() {
       )}
       <div className={`${styles.container} ${characterId ? styles.vertical : ''}`}>
         {!isFetching &&
-          !isError &&
           data?.results?.map((character: Character) => (
             <CharacterCard
               key={character.id}

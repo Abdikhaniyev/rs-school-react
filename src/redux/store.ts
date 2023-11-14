@@ -1,10 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import searchReducer from './slices/searchSlice';
+import layoutReducer from './slices/layoutSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { CharacterApi } from './actions/character';
 
 const rootReducer = combineReducers({
-  search: searchReducer,
+  layout: layoutReducer,
   [CharacterApi.reducerPath]: CharacterApi.reducer,
 });
 
