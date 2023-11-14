@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import leftIcon from '../../assets/left.svg';
 import rightIcon from '../../assets/right.svg';
 import styles from './Pagination.module.scss';
-import { useStoreContext } from '../../context/StoreContext';
 
 interface Props {
   count: number;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function Pagination(props: Props) {
-  const { setPage } = useStoreContext();
+  const [, setSearchParams] = useSearchParams();
   const { count, current, pages } = props;
   const [start, setStart] = useState<number>(current < 6 ? 1 : current - 5);
   const [end, setEnd] = useState<number>(current < 6 ? 10 : current + 4);
@@ -34,6 +34,13 @@ export default function Pagination(props: Props) {
     generatePagesArray();
   }, [current, count, generatePagesArray]);
 
+  const handleChangePage = useCallback(
+    (page: number) => {
+      setSearchParams({ page: page.toString() });
+    },
+    [setSearchParams]
+  );
+
   return (
     <div className={styles['pagination-container']}>
       <ul className={styles.pagination}>
@@ -41,7 +48,7 @@ export default function Pagination(props: Props) {
           <li
             data-testid="pagination__item"
             className={styles['pagination__item']}
-            onClick={() => setPage(current - 1)}
+            onClick={() => handleChangePage(current - 1)}
           >
             <img src={leftIcon} alt="prev" />
           </li>
@@ -51,7 +58,7 @@ export default function Pagination(props: Props) {
             key={page}
             data-testid="pagination__item"
             className={`${styles['pagination__item']} ${page === current ? styles.active : ''}`}
-            onClick={() => setPage(page)}
+            onClick={() => handleChangePage(page)}
           >
             {page}
           </li>
@@ -60,7 +67,7 @@ export default function Pagination(props: Props) {
           <li
             data-testid="pagination__item"
             className={styles['pagination__item']}
-            onClick={() => setPage(current + 1)}
+            onClick={() => handleChangePage(current + 1)}
           >
             <img src={rightIcon} alt="next" />
           </li>
@@ -84,7 +91,7 @@ export default function Pagination(props: Props) {
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
-            setPage(parseInt(inputValue));
+            handleChangePage(parseInt(inputValue));
           }
         }}
       />
