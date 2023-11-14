@@ -1,7 +1,5 @@
-import { useCallback, useEffect } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useParams, useSearchParams } from 'react-router-dom';
 import styles from './App.module.scss';
-import { getCharacters } from './api/character';
 import {
   Banner,
   BugButton,
@@ -13,38 +11,15 @@ import {
   Pagination,
   WarningSection,
 } from './components';
-import { useStoreContext } from './context/StoreContext';
-import { Info } from './interfaces';
+import { useGetCharactersQuery } from './redux/actions/character';
 import { useAppSelector } from './redux/store';
 
 export default function App() {
   const { characterId } = useParams();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1;
   const search = useAppSelector((state) => state.search.value);
-  const { page, characters, setCharacters } = useStoreContext();
-  const { results, info } = characters;
-
-  const fetchCharacters = useCallback(
-    async (search: string, page?: number) => {
-      setCharacters({ results: [], info: null, error: '', loading: true });
-      getCharacters(search, page)
-        .then((data) => {
-          setCharacters({
-            results: data.results,
-            info: data.info,
-            error: '',
-            loading: false,
-          });
-        })
-        .catch((error) => {
-          setCharacters({ results: [], info: null, error: error.message, loading: false });
-        });
-    },
-    [setCharacters]
-  );
-
-  useEffect(() => {
-    fetchCharacters(search, page);
-  }, [search, page, fetchCharacters]);
+  const { data, isError } = useGetCharactersQuery({ name: search, page });
 
   return (
     <ErrorBoundary fallback={<Fallback>Something went wrong</Fallback>}>
@@ -57,8 +32,8 @@ export default function App() {
         <Characters />
         <Outlet />
       </div>
-      {results?.length > 0 && info !== null && (
-        <Pagination current={page} count={(info as Info)?.count} pages={(info as Info)?.pages} />
+      {data && data.results && data.info !== undefined && !isError && (
+        <Pagination current={page} count={data.info.count} pages={data.info.pages} />
       )}
       <Footer />
     </ErrorBoundary>
