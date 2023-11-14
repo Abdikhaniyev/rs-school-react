@@ -1,12 +1,12 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { getCharacter } from '../../api/character';
-import { getEpisodes } from '../../api/episode';
-import { useStoreContext } from '../../context/StoreContext';
+import { useLazyGetCharacterQuery } from '../../redux/actions/character';
+import { useLazyGetEpisodesQuery } from '../../redux/actions/episode';
+import { setViewMode } from '../../redux/slices/layoutSlice';
+import { useAppDispatch } from '../../redux/store';
+import { Episode } from '../../redux/types/episode';
 import Spinner from '../Spinner';
 import styles from './Detailed.module.scss';
-import { useAppDispatch } from '../../redux/store';
-import { setViewMode } from '../../redux/slices/layoutSlice';
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
@@ -15,42 +15,25 @@ export default function Detailed() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
-  const { currentCharacter, setCurrentCharacter } = useStoreContext();
+  const [fetchCharacter, { data: characterData, isLoading: characterLoading }] =
+    useLazyGetCharacterQuery();
+  const [fetchEpisodes, { data: episodesData, isLoading: episodesLoading }] =
+    useLazyGetEpisodesQuery();
 
-  const { character, episodes, loading } = currentCharacter || {};
-  const { name, image, status, species, location, gender, origin } = character || {};
-
-  const fetchCharacterDetails = useCallback(
-    async (id: string) => {
-      setCurrentCharacter({ character: null, episodes: [], loading: true, error: '', info: null });
-      getCharacter(id)
-        .then((character) => {
-          getEpisodes(character.episode).then((episodes) => {
-            setCurrentCharacter({ character, episodes, loading: false, error: '', info: null });
-          });
-        })
-        .catch((error) => {
-          setCurrentCharacter({
-            character: null,
-            episodes: [],
-            loading: false,
-            error: error.message,
-            info: null,
-          });
-        });
-    },
-    [setCurrentCharacter]
-  );
+  const { name, image, status, species, location, gender, origin } = characterData || {};
 
   useEffect(() => {
     if (characterId) {
-      fetchCharacterDetails(characterId);
+      fetchCharacter({ id: characterId });
     }
-  }, [characterId, fetchCharacterDetails]);
+    if (characterData) {
+      fetchEpisodes({ episodes: characterData.episode });
+    }
+  }, [characterData, characterId, fetchCharacter, fetchEpisodes]);
 
   return (
     <div className={styles.character}>
-      {loading && (
+      {characterLoading && (
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           className={styles.container}
@@ -58,7 +41,7 @@ export default function Detailed() {
           <Spinner />
         </div>
       )}
-      {!loading && character && (
+      {!characterLoading && characterData && (
         <div className={styles.container}>
           <div className={styles.avatar}>
             <img src={image} alt={name} />
@@ -102,16 +85,26 @@ export default function Detailed() {
               <span>{location?.name}</span>
             </div>
           </div>
-          <div className={styles.episodes}>
-            <h2>Episodes:</h2>
-            {episodes?.map((episode) => (
-              <div key={episode.id} className={styles.episode}>
-                <h3>{episode.name}</h3>
-                <span>{episode.episode}</span>
-                <span>{episode.air_date}</span>
-              </div>
-            ))}
-          </div>
+          {episodesLoading && (
+            <div
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              className={styles.container}
+            >
+              <Spinner />
+            </div>
+          )}
+          {episodesData && (
+            <div className={styles.episodes}>
+              <h2>Episodes:</h2>
+              {(episodesData as Episode[])?.map((episode) => (
+                <div key={episode.id} className={styles.episode}>
+                  <h3>{episode.name}</h3>
+                  <span>{episode.episode}</span>
+                  <span>{episode.air_date}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -15,15 +15,9 @@ export const CharacterApi = createApi({
     }),
     getCharacter: builder.query<Character, { id: string }>({
       query: ({ id }) => `character/${id}`,
-      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
-        try {
-          await queryFulfilled;
-        } catch (error) {
-          dispatch(CharacterApi.util.resetApiState());
-        }
-      },
     }),
   }),
 });
 
-export const { useGetCharactersQuery, useGetCharacterQuery } = CharacterApi;
+export const { useGetCharactersQuery, useGetCharacterQuery, useLazyGetCharacterQuery } =
+  CharacterApi;
