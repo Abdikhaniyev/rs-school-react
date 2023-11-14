@@ -1,4 +1,4 @@
-import { Outlet, useParams, useSearchParams } from 'react-router-dom';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import styles from './App.module.scss';
 import {
   Banner,
@@ -15,10 +15,9 @@ import { useGetCharactersQuery } from './redux/actions/character';
 import { useAppSelector } from './redux/store';
 
 export default function App() {
-  const { characterId } = useParams();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1;
-  const search = useAppSelector((state) => state.layout.search);
+  const { search, viewMode } = useAppSelector((state) => state.layout);
   const { data, isError } = useGetCharactersQuery({ name: search, page });
 
   return (
@@ -28,7 +27,7 @@ export default function App() {
       <WarningSection>
         <BugButton />
       </WarningSection>
-      <div className={characterId ? styles.detailed : ''}>
+      <div className={viewMode === 'detailed' ? styles.detailed : ''}>
         <Characters />
         <Outlet />
       </div>

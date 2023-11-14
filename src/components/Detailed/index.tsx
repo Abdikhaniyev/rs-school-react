@@ -5,12 +5,15 @@ import { getEpisodes } from '../../api/episode';
 import { useStoreContext } from '../../context/StoreContext';
 import Spinner from '../Spinner';
 import styles from './Detailed.module.scss';
+import { useAppDispatch } from '../../redux/store';
+import { setViewMode } from '../../redux/slices/layoutSlice';
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
 export default function Detailed() {
   const { characterId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const { currentCharacter, setCurrentCharacter } = useStoreContext();
 
@@ -66,6 +69,7 @@ export default function Detailed() {
               <button
                 data-testid="back"
                 onClick={() => {
+                  dispatch(setViewMode('grid'));
                   navigate(`${home}/?${searchParams.toString()}`);
                 }}
               >

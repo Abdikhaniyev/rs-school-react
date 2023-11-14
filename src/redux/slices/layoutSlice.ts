@@ -3,10 +3,12 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface LayoutState {
   search: string;
+  viewMode: 'detailed' | 'grid';
 }
 
 const initialState: LayoutState = {
   search: localStorage.getItem('search') || '',
+  viewMode: window.location.pathname.includes('character') ? 'detailed' : 'grid',
 };
 
 export const layoutSlice = createSlice({
@@ -17,8 +19,11 @@ export const layoutSlice = createSlice({
       state.search = action.payload;
       localStorage.setItem('search', action.payload);
     },
+    setViewMode: (state, action: PayloadAction<'detailed' | 'grid'>) => {
+      state.viewMode = action.payload;
+    },
   },
 });
 
-export const { setSearch } = layoutSlice.actions;
+export const { setSearch, setViewMode } = layoutSlice.actions;
 export default layoutSlice.reducer;
