@@ -6,53 +6,43 @@ import {
   MemoryRouter,
   MemoryRouterProps,
 } from 'react-router-dom';
-import { StoreContext, StoreContextState } from '../context/StoreContext';
+import { Provider } from 'react-redux';
+import { AppStore, RootState, setupStore } from '../redux/store';
+import { PreloadedState } from '@reduxjs/toolkit';
 
 interface Options extends RenderOptions {
   router?: 'memory' | 'browser';
   routerProps?: BrowserRouterProps | MemoryRouterProps;
-}
-
-interface OptionsWithStore extends Options {
-  store: true;
-  storeValues: StoreContextState;
+  preloadedState?: PreloadedState<RootState>;
+  store?: AppStore;
 }
 
 function customRender(
   ui: ReactElement,
-  options: Options | OptionsWithStore = {
-    store: true,
-    storeValues: {
-      search: localStorage.getItem('search') || '',
-      setSearch: () => {},
-      page: 1,
-      setPage: () => {},
-      characters: { results: [], info: null, error: '', loading: false },
-      setCharacters: () => {},
-      currentCharacter: { character: null, episodes: [], info: null, error: '', loading: false },
-      setCurrentCharacter: () => {},
-    },
-    router: 'browser',
-    routerProps: {},
-  }
+  {
+    router = 'browser',
+    routerProps = {},
+    preloadedState = {},
+    store = setupStore(preloadedState),
+    ...renderOptions
+  }: Options = {}
 ) {
   const Wrapper = ({ children }: { children: ReactNode }) => {
-    const Router = options.router === 'browser' ? BrowserRouter : MemoryRouter;
-    if ((options as OptionsWithStore).store) {
-      return (
-        <StoreContext.Provider value={(options as OptionsWithStore).storeValues}>
-          <Router {...options.routerProps}>{children}</Router>
-        </StoreContext.Provider>
-      );
-    } else {
-      return <Router {...options.routerProps}>{children}</Router>;
-    }
+    const Router = router === 'browser' ? BrowserRouter : MemoryRouter;
+    return (
+      <Provider store={store}>
+        <Router {...routerProps}>{children}</Router>
+      </Provider>
+    );
   };
 
-  return render(ui, {
-    wrapper: Wrapper,
-    ...options,
-  });
+  return {
+    store,
+    ...render(ui, {
+      wrapper: Wrapper,
+      ...renderOptions,
+    }),
+  };
 }
 
 export * from '@testing-library/react';

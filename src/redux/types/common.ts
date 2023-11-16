@@ -15,6 +15,7 @@ export interface Info {
 export interface PaginateResponse<T> {
   info?: Info;
   results?: T;
+  error?: string;
 }
 
 export interface ResponseError {
