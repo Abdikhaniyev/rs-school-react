@@ -1,29 +1,12 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
-import { getCharacter } from '../../api/character';
+import { MouseEvent, useRef } from 'react';
 import portal from '../../assets/portal.png';
-import { Character } from '../../interfaces';
+import { useGetCharacterQuery } from '../../redux/actions/character';
 import CharacterCard from '../CharacterCard';
 import styles from './Banner.module.scss';
 
 export default function Banner() {
   const ref = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [character, setCharacter] = useState<Character | undefined>(undefined);
-
-  const fetchCharacter = async (id: string) => {
-    setLoading(true);
-    getCharacter(id)
-      .then((data) => {
-        setCharacter(data);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    fetchCharacter('1');
-  }, []);
+  const { data, isFetching } = useGetCharacterQuery({ id: '1' });
 
   const onMouseMove = (event: MouseEvent) => {
     const { pageX, pageY } = event;
@@ -51,7 +34,7 @@ export default function Banner() {
     <div className={styles.banner} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
       <div className={styles['banner-left']}>Rick and Morty</div>
       <div className={styles['banner-right']}>
-        {!loading && character && <CharacterCard ref={ref} bannerCard character={character} />}
+        {!isFetching && data && <CharacterCard ref={ref} bannerCard character={data} />}
         <img className={styles.portal} src={portal} alt="portal" />
       </div>
     </div>
