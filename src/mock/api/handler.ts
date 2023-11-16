@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { Character } from '../../redux/types/character';
 import { PaginateResponse } from '../../redux/types/common';
+import { Episode } from '../../redux/types/episode';
 
 const characters: PaginateResponse<Character[]> = {
   info: {
@@ -113,6 +114,37 @@ const characters: PaginateResponse<Character[]> = {
   ],
 };
 
+export const character: Character = {
+  id: 1,
+  name: 'Rick Sanchez',
+  status: 'Alive',
+  species: 'Human',
+  type: '',
+  gender: 'Male',
+  origin: {
+    name: 'Earth (C-137)',
+    url: 'https://rickandmortyapi.com/api/location/1',
+  },
+  location: {
+    name: 'Citadel of Ricks',
+    url: 'https://rickandmortyapi.com/api/location/3',
+  },
+  image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+  episode: ['https://rickandmortyapi.com/api/episode/1'],
+  url: 'https://rickandmortyapi.com/api/character/1',
+  created: '2017-11-04T18:48:46.250Z',
+};
+
+export const episode: Episode = {
+  air_date: 'December 2, 2013',
+  characters: ['https://rickandmortyapi.com/api/character/1'],
+  created: '2017-11-10T12:56:33.798Z',
+  episode: 'S01E01',
+  id: 1,
+  name: 'Pilot',
+  url: 'https://rickandmortyapi.com/api/episode/1',
+};
+
 const charactersWithError: PaginateResponse<Character[]> = {
   error: 'There is nothing here',
 };
@@ -126,5 +158,13 @@ export const handlers = [
       return HttpResponse.json(charactersWithError, { status: 500 });
     }
     return HttpResponse.json(characters, { status: 200 });
+  }),
+
+  http.get('https://rickandmortyapi.com/api/character/1', () => {
+    return HttpResponse.json(character, { status: 200 });
+  }),
+
+  http.get('https://rickandmortyapi.com/api/episode/1', () => {
+    return HttpResponse.json(character, { status: 200 });
   }),
 ];

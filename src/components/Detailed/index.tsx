@@ -15,9 +15,9 @@ export default function Detailed() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
-  const [fetchCharacter, { data: characterData, isLoading: characterLoading }] =
+  const [fetchCharacter, { data: characterData, isFetching: characterLoading }] =
     useLazyGetCharacterQuery();
-  const [fetchEpisodes, { data: episodesData, isLoading: episodesLoading }] =
+  const [fetchEpisodes, { data: episodesData, isFetching: episodesLoading }] =
     useLazyGetEpisodesQuery();
 
   const { name, image, status, species, location, gender, origin } = characterData || {};
