@@ -2,8 +2,12 @@ import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetCharacterQuery } from '../../redux/actions/character';
 import { useLazyGetEpisodesQuery } from '../../redux/actions/episode';
-import { setViewMode } from '../../redux/slices/layoutSlice';
-import { useAppDispatch } from '../../redux/store';
+import {
+  setCharacterLoading,
+  setEpisodesLoading,
+  setViewMode,
+} from '../../redux/slices/layoutSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { Episode } from '../../redux/types/episode';
 import Spinner from '../Spinner';
 import styles from './Detailed.module.scss';
@@ -15,10 +19,11 @@ export default function Detailed() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
-  const [fetchCharacter, { data: characterData, isFetching: characterLoading }] =
+  const [fetchCharacter, { data: characterData, isFetching: isFetchingCharacter }] =
     useLazyGetCharacterQuery();
-  const [fetchEpisodes, { data: episodesData, isFetching: episodesLoading }] =
+  const [fetchEpisodes, { data: episodesData, isFetching: isFetchingEpisodes }] =
     useLazyGetEpisodesQuery();
+  const { characterLoading, episodesLoading } = useAppSelector((state) => state.layout);
 
   const { name, image, status, species, location, gender, origin } = characterData || {};
 
@@ -30,6 +35,14 @@ export default function Detailed() {
       fetchEpisodes({ episodes: characterData.episode });
     }
   }, [characterData, characterId, fetchCharacter, fetchEpisodes]);
+
+  useEffect(() => {
+    dispatch(setCharacterLoading(isFetchingCharacter));
+  }, [dispatch, isFetchingCharacter]);
+
+  useEffect(() => {
+    dispatch(setEpisodesLoading(isFetchingEpisodes));
+  }, [dispatch, isFetchingEpisodes]);
 
   return (
     <div className={styles.character}>

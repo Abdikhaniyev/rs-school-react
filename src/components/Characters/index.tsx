@@ -6,7 +6,8 @@ import { ResponseError } from '../../redux/types/common';
 import CharacterCard from '../CharacterCard';
 import Spinner from '../Spinner';
 import styles from './Characters.module.scss';
-import { setViewMode } from '../../redux/slices/layoutSlice';
+import { setCharactersLoading, setViewMode } from '../../redux/slices/layoutSlice';
+import { useEffect } from 'react';
 
 const home = import.meta.env.VITE_HOME_PAGE;
 
@@ -16,8 +17,15 @@ export default function Characters() {
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1;
-  const { search, viewMode } = useAppSelector((state) => state.layout);
-  const { data, isFetching, isError, error } = useGetCharactersQuery({ name: search, page });
+  const { search, viewMode, charactersLoading } = useAppSelector((state) => state.layout);
+  const { data, isFetching, isError, error } = useGetCharactersQuery({
+    name: search,
+    page,
+  });
+
+  useEffect(() => {
+    dispatch(setCharactersLoading(isFetching));
+  }, [dispatch, isFetching]);
 
   return (
     <div
@@ -29,7 +37,7 @@ export default function Characters() {
         }
       }}
     >
-      {isFetching && (
+      {charactersLoading && (
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           className={styles.container}
@@ -38,7 +46,7 @@ export default function Characters() {
         </div>
       )}
       <div className={`${styles.container} ${viewMode === 'detailed' ? styles.vertical : ''}`}>
-        {!isFetching &&
+        {!charactersLoading &&
           !isError &&
           data?.results?.map((character: Character) => (
             <CharacterCard
@@ -49,7 +57,7 @@ export default function Characters() {
             />
           ))}
 
-        {!isFetching && isError && (
+        {!charactersLoading && isError && (
           <div className={styles['no-results']}>
             <h2>{(error as ResponseError).data.error}</h2>
           </div>
