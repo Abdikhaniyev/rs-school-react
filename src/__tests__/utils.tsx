@@ -20,12 +20,14 @@ interface Options extends RenderOptions {
 function customRender(
   ui: ReactElement,
   {
-    router = 'browser',
+    router,
     routerProps = {},
     preloadedState = {},
     store = setupStore(preloadedState),
     ...renderOptions
-  }: Options = {}
+  }: Options = {
+    router: 'browser',
+  }
 ) {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     const Router = router === 'browser' ? BrowserRouter : MemoryRouter;
