@@ -1,0 +1,44 @@
+@import '../../App.module.scss';
+
+.container {
+  height: 100vh;
+  background-color: #252a49;
+  background-image: url('../../assets/404.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  img {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  h1 {
+    color: #f5f5f5;
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 60%;
+    min-width: 300px;
+    display: block;
+    text-align: center;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: #f5f5f5;
+    color: #252a49;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+}

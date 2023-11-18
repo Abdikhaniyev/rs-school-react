@@ -1,0 +1,59 @@
+.banner {
+  background-color: #252a49;
+  min-height: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: minmax(400px, 60vh);
+  padding: 8rem 1.5rem 4rem;
+
+  &-left {
+    margin-left: 4rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: clamp(5rem, 10vw, 10rem);
+    line-height: 0.9;
+    font-family: 'Bebas Neue', sans-serif;
+
+    @media screen and (max-width: 768px) {
+      margin-left: 0;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .portal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: 60%;
+    filter: drop-shadow(0 0 3rem #5cad4a) drop-shadow(0 0 1rem #5cad4a);
+    animation: portal 30s linear infinite;
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(200px, 0.6fr) minmax(350px, 1fr);
+  }
+}
+
+@keyframes portal {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+  }
+}

@@ -1,0 +1,81 @@
+@import '../../App.module.scss';
+
+.header {
+  position: fixed;
+  top: 0;
+  padding: 1.5rem 0;
+  z-index: 10;
+  width: 100%;
+  transition: background 0.2s ease 0s;
+
+  &.scrolled {
+    background: rgba(25, 30, 52, 0.8);
+    backdrop-filter: blur(1.5rem);
+    box-shadow: rgb(30 30 56 / 30%) 0px 1rem 3rem -1rem;
+  }
+
+  & .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  & .logo {
+    height: 3rem;
+    width: auto;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    width: calc(50vw - 2rem);
+    max-width: calc(720px - 2rem);
+
+    input {
+      color: rgb(0, 0, 0);
+      background: rgba(255, 255, 255, 0.87);
+      border: none;
+      font-size: 1.15rem;
+      flex: 1 1 0%;
+      padding: 1rem 1.5rem;
+      outline: none;
+      width: 100%;
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+      transition: all 0.2s ease 0s;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    button {
+      background: #42b4ca;
+      color: rgb(250, 250, 252);
+      border: none;
+      height: 3.5rem;
+      width: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease 0s;
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+
+      @media screen and (max-width: 768px) {
+        max-width: 2.5rem;
+      }
+
+      &:hover {
+        background: #2b8b9a;
+      }
+
+      img {
+        height: 1.25rem;
+        width: auto;
+      }
+    }
+  }
+}
