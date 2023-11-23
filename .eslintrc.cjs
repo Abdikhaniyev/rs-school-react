@@ -22,7 +22,14 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'react', 'prettier', 'react-hooks', 'react-refresh'],
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'prettier',
+    'react-hooks',
+    'react-refresh',
+    'simple-import-sort',
+  ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   rules: {
     'react-hooks/rules-of-hooks': 'error',
@@ -41,7 +48,30 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
   },
+  overrides: [
+    {
+      files: ['**/*.js', '**/*.ts', '**/*.tsx'],
+      rules: {
+        'simple-import-sort/imports': [
+          'error',
+          {
+            groups: [
+              ['^react$', '^next', '^[a-z]'],
+              ['^@'],
+              ['^~'],
+              ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+              ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+              ['^.+\\.s?css$'],
+              ['^\\u0000'],
+            ],
+          },
+        ],
+      },
+    },
+  ],
   settings: {
     react: {
       pragma: 'React',
