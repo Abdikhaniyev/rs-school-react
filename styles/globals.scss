@@ -1,0 +1,30 @@
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  font-family: var(--font-dm-sans), sans-serif;
+  color: rgba(255, 255, 255, 0.87);
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  min-height: 100vh;
+  background-image: url('/pattern-background.png');
+  background-color: #414b81;
+  background-repeat: repeat;
+  background-size: contain;
+}
