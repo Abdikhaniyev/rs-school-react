@@ -8,15 +8,17 @@ import { Character } from '@/redux/types/character';
 import { PaginateResponse, ResponseError } from '@/redux/types/common';
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const { page } = context.query;
-  const name = store.getState().layout.search;
+  const { page, search } = context.query;
 
   const {
     data: dataCharacters,
     isError: isErrorCharacters,
     error,
   } = await store.dispatch(
-    getCharacters.initiate({ name, page: page ? parseInt(page as string) : 1 })
+    getCharacters.initiate({
+      name: (search ?? '') as string,
+      page: page ? parseInt(page as string) : 1,
+    })
   );
 
   const { data: dataBannerCharacter } = await store.dispatch(getCharacter.initiate({ id: '1' }));

@@ -1,15 +1,18 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import { setSearch } from '../redux/slices/layoutSlice';
-import { useAppDispatch, useAppSelector } from '../redux/store';
+import { useAppDispatch } from '../redux/store';
 
 import styles from '@/styles/Header.module.scss';
 
 export default function Header() {
-  const search = useAppSelector((state) => state.layout.search);
+  const router = useRouter();
+  const { query, pathname } = router;
+  const { search } = query;
   const dispatch = useAppDispatch();
-  const [inputValue, setInputValue] = useState<string>(search);
+  const [inputValue, setInputValue] = useState<string>(search as string);
   const headerRef = useRef<HTMLElement | null>(null);
 
   const handleScroll = () => {
@@ -41,6 +44,10 @@ export default function Header() {
   };
 
   const handleSearch = () => {
+    router.push({
+      pathname: pathname,
+      query: { ...query, search: inputValue, page: 1 },
+    });
     dispatch(setSearch(inputValue));
   };
 
