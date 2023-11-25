@@ -1,24 +1,15 @@
 import { ReactElement, ReactNode } from 'react';
 import { Provider } from 'react-redux';
 
-import { PreloadedState } from '@reduxjs/toolkit';
 import { render, RenderOptions } from '@testing-library/react';
 
-import { AppStorePreloaded, RootState, setupStorePreloaded } from '../redux/store';
+import { AppStore, setupStore } from '../redux/store';
 
 interface Options extends RenderOptions {
-  preloadedState?: PreloadedState<RootState>;
-  store?: AppStorePreloaded;
+  store?: AppStore;
 }
 
-function customRender(
-  ui: ReactElement,
-  {
-    preloadedState = {} as PreloadedState<RootState>,
-    store = setupStorePreloaded(preloadedState),
-    ...renderOptions
-  }: Options = {}
-) {
+function customRender(ui: ReactElement, { store = setupStore(), ...renderOptions }: Options = {}) {
   const Wrapper = ({ children }: { children: ReactNode }) => {
     return <Provider store={store}>{children}</Provider>;
   };
