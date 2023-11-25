@@ -15,8 +15,10 @@ const bebas_neue = Bebas_Neue({
   variable: '--font-bebas-neue',
 });
 
-export default function App({ Component, pageProps }: AppProps) {
-  const { store } = wrapper.useWrappedStore(pageProps);
+export default function App({ Component, ...rest }: AppProps) {
+  const { store, props } = wrapper.useWrappedStore(rest);
+  const { pageProps } = props;
+
   return (
     <Provider store={store}>
       <div className={`${dm_sans.variable} ${bebas_neue.variable}`}>

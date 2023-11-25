@@ -19,7 +19,7 @@ const CharacterCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { character, inline, bannerCard, selected, ...otherProps } = props;
-  const { name, image, status, species } = character;
+  const { name, image, status, species } = character ?? {};
 
   return (
     <div
@@ -58,7 +58,7 @@ const CharacterCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <h2>{name}</h2>
 
         <div className={styles.status}>
-          <span className={`${styles['status__icon']} ${styles[status.toLowerCase()]}`}></span>
+          <span className={`${styles['status__icon']} ${styles[status?.toLowerCase()]}`}></span>
           <span>
             {status} - {species}
           </span>

@@ -10,7 +10,7 @@ import { CharacterCard, Spinner } from '.';
 import styles from '@/styles/Characters.module.scss';
 
 interface CharactersProps {
-  characters: PaginateResponse<Character[]>;
+  characters?: PaginateResponse<Character[]>;
   isError: boolean;
   error?: ResponseError;
 }
