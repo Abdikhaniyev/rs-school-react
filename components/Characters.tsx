@@ -12,7 +12,7 @@ import styles from '@/styles/Characters.module.scss';
 interface CharactersProps {
   characters: PaginateResponse<Character[]>;
   isError: boolean;
-  error: ResponseError;
+  error?: ResponseError;
 }
 
 export default function Characters(props: CharactersProps) {

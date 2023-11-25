@@ -51,7 +51,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
 interface PageProps {
   characters: PaginateResponse<Character[]>;
   isError: boolean;
-  error: ResponseError;
+  error?: ResponseError;
   bannerCharacter: Character;
   character: Character;
   episodes: Episode[];
