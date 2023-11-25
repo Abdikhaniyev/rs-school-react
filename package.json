@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint && prettier --check .",
     "fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix && prettier . --write",
-    "test": "jest --watch",
+    "test": "jest",
     "test:ci": "jest --ci",
     "prepare": "husky install",
     "lint-staged": "lint-staged"
