@@ -1,0 +1,21 @@
+@import './Layout.module.scss';
+
+.footer {
+  background-color: #252a49;
+  padding: 1.5rem 0;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  a {
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
