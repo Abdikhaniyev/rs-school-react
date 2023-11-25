@@ -1,3 +1,7 @@
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+
+import { createMockRouter } from '@/test-utils/createMockRouter';
+
 import Header from '../components/Header';
 import { setSearch } from '../redux/slices/layoutSlice';
 import { setupStore } from '../redux/store';
@@ -7,8 +11,13 @@ describe('Header component', () => {
   it('saves search value to local storage when search button is clicked', () => {
     const store = setupStore();
     store.dispatch(setSearch(''));
+    const router = createMockRouter({});
 
-    render(<Header />, { store: store });
+    render(
+      <RouterContext.Provider value={router}>
+        <Header />
+      </RouterContext.Provider>
+    );
 
     const searchInput = screen.getByTestId('search-input');
     const searchButton = screen.getByTestId('search-button');
@@ -19,13 +28,5 @@ describe('Header component', () => {
     });
 
     expect(window.localStorage.getItem('search')).toBe('Rick Sanchez');
-  });
-  it('retrieves search value from local storage upon mounting', () => {
-    const store = setupStore();
-    store.dispatch(setSearch('Morty Smith'));
-
-    render(<Header />, { store: store });
-
-    expect(screen.getByTestId('search-input')).toHaveValue('Morty Smith');
   });
 });

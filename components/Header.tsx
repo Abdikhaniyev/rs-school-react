@@ -12,7 +12,7 @@ export default function Header() {
   const { query, pathname } = router;
   const { search } = query;
   const dispatch = useAppDispatch();
-  const [inputValue, setInputValue] = useState<string>(search as string);
+  const [inputValue, setInputValue] = useState<string>((search ?? '') as string);
   const headerRef = useRef<HTMLElement | null>(null);
 
   const handleScroll = () => {
