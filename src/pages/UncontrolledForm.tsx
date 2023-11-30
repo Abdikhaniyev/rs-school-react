@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { boolean, mixed, number, object, ref, string, ValidationError } from 'yup';
 
 import { useGetCountriesQuery } from '../redux/actions/country';
-import { addForm } from '../redux/slices/layoutSlice';
+import { addForm, FormValues } from '../redux/slices/layoutSlice';
 import { useAppDispatch } from '../redux/store';
 
 export const FormSchema = object().shape({
@@ -28,33 +28,16 @@ export const FormSchema = object().shape({
   term: boolean()
     .required('The terms and conditions must be accepted.')
     .oneOf([true], 'The terms and conditions must be accepted.'),
-  image: mixed<File>()
-    .required('Picture is required')
-    .test(
-      'fileSize',
-      'File size is too large',
-      (value: File | undefined) => value && value.size <= 1024 * 1024 * 16 // 16 MB
+  image: mixed<FileList>()
+    .test('fileSize', 'File size is too large', (value: FileList | undefined) =>
+      value && value?.length > 0 ? value?.[0]?.size <= 1024 * 1024 * 16 : true
     )
-    .test(
-      'fileType',
-      'Invalid file type. Only PNG and JPEG are allowed',
-      (value) => value && ['image/png', 'image/jpeg'].includes(value.type)
-    ),
+    .test('fileType', 'Invalid file type. Only PNG and JPEG are allowed', (value) => {
+      console.log(value);
+      return value && ['image/png', 'image/jpeg'].includes(value?.[0]?.type);
+    }),
   country: string().required('Country is required'),
 });
-
-export interface FormValues {
-  name: string | undefined;
-  age: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
-  passwordConfirmation: string | undefined;
-  gender: string;
-  term: boolean | undefined;
-  image: File | undefined;
-  imageBase64?: string | ArrayBuffer | null;
-  country: string | undefined;
-}
 
 export default function UncontrolledForm() {
   const { data } = useGetCountriesQuery();
@@ -72,32 +55,20 @@ export default function UncontrolledForm() {
   const imageRef = useRef<HTMLInputElement>(null);
   const countryRef = useRef<HTMLInputElement>(null);
 
-  const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = () => {
-        reject;
-      };
-    });
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const name = nameRef.current?.value;
-    const age = ageRef.current?.value;
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
-    const passwordConfirmation = passwordConfirmationRef.current?.value;
+    const name = nameRef.current?.value ?? '';
+    const age = ageRef.current?.value ? Number(ageRef.current?.value) : 0;
+    const email = emailRef.current?.value ?? '';
+    const password = passwordRef.current?.value ?? '';
+    const passwordConfirmation = passwordConfirmationRef.current?.value ?? '';
     const gender = maleRef.current?.checked ? 'Male' : 'Female';
-    const term = termRef.current?.checked;
-    const image = imageRef.current?.files?.[0];
+    const term = termRef.current?.checked ?? false;
+    const image = imageRef.current?.files ?? undefined;
     const imageBase64 = imageRef.current?.files?.[0]
-      ? await getBase64(imageRef.current?.files?.[0])
+      ? URL.createObjectURL(imageRef.current?.files?.[0])
       : null;
-    const country = countryRef.current?.value;
+    const country = countryRef.current?.value ?? '';
 
     const data: FormValues = {
       name,
@@ -116,9 +87,11 @@ export default function UncontrolledForm() {
       await FormSchema.validateSync(data, { abortEarly: false });
       setError(null);
 
-      if (FormSchema.isValidSync(data) && imageRef.current?.files?.[0]) {
-        dispatch(addForm(data));
-        navigate('/');
+      if (FormSchema.isValidSync(data)) {
+        data.image = undefined;
+        const id = Math.random().toString(36).substring(2, 9);
+        dispatch(addForm({ ...data, id }));
+        navigate('/', { state: { id: id } });
       }
     } catch (error) {
       setError(error as ValidationError);
@@ -203,6 +176,7 @@ export default function UncontrolledForm() {
             type="file"
             accept="image/png, image/jpeg"
             id="image"
+            multiple={false}
           />
           <small className="error">{error?.inner.find((e) => e.path === 'image')?.message}</small>
         </div>
@@ -212,7 +186,7 @@ export default function UncontrolledForm() {
           <input ref={countryRef} list="countries" name="country" id="country" />
           <datalist id="countries">
             {data?.map((country) => (
-              <option key={country.name.official} value={country.name.official} />
+              <option key={country.name.common} value={country.name.common} />
             ))}
           </datalist>
         </div>
