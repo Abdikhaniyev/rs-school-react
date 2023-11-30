@@ -1,8 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { FormValues } from '../../pages/UncontrolledForm';
+export interface FormValues {
+  id?: string;
+  name: string;
+  age: number;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  gender: string;
+  term: NonNullable<boolean | undefined>;
+  image?: FileList | undefined;
+  imageBase64?: string | ArrayBuffer | null;
+  country: string;
+}
 
 interface LayoutState {
   latestForms: FormValues[];
@@ -17,7 +28,7 @@ export const layoutSlice = createSlice({
   initialState: initialState,
   reducers: {
     addForm: (state, action: PayloadAction<FormValues>) => {
-      state.latestForms.push(action.payload);
+      state.latestForms.unshift(action.payload);
     },
   },
 });
